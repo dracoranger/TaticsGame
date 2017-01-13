@@ -1,11 +1,13 @@
 //Holds actors, ai, and equipment
+import scala.collection.mutable
+import scala.util.random
 
 class Elem(){
-
+  def isEmpty= false
 }
 
 class Empt extends Elem{
-
+  def isEmpty=true
 }
 
 class Actor() extends Elem{
