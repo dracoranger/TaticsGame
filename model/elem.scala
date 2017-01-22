@@ -1,23 +1,26 @@
 //Holds actors, ai, and equipment
+package elem
+
 import scala.collection.mutable
-import scala.util.random
+import scala.util.Random
+
 
 class Elem(){
   def isEmpty= false
 }
 
-class Empt extends Elem{
-  def isEmpty=true
+class Empt() extends Elem{
+  override def isEmpty=true
 }
 
 class Actor() extends Elem{
   val name="Dave Fault"
-  val empathy=Map[actor,double]()
-  val kills=Map[actor,int]()
-  val isAlly=Map[actor,Boolean]()
-  val isEnemy=Map[actor,Boolean]()
-  var weapon=defaultWeapon
+  val empathy=Map[Actor,Double]()
+  val kills=Map[Actor,Int]()
+  val isAlly=Map[Actor,Boolean]()
+  val isEnemy=Map[Actor,Boolean]()
   val defaultWeapon=new Weapon()
+  var weapon=defaultWeapon
   val isPC=false
   val ai=new AI()
 
@@ -32,19 +35,19 @@ class Actor() extends Elem{
   var awareness=new AlertLevel(3)
 
   def isAlive():Boolean=alive
-  def getHealth():Int=health
-  def getSpeed():Int=speed
-  def getStrength():Int=strength
-  def getEndurance():Int=endurance
+  def getHealth():Double=health
+  def getSpeed():Double=speed
+  def getStrength():Double=strength
+  def getEndurance():Double=endurance
   def getEmpathy(act:Actor)=empathy(act)
-  def getHitAbil(state:State)=calculateHitAbil(state)
-  def getDodgeAbil()=???
-  def getAI():Int=aiType
+  //def getHitAbil(state:State)=calculateHitAbil(state)
+  //def getDodgeAbil()= ???
+  def getAI():Int= ???;//aiType
   def getWeaponDam=weapon.getDamage()
 
   def updateHealth(delta:Int)={
     health=health-delta
-    if(health<1) isAlive=false
+    if(health<1) alive=false
   }
   def updateEmpathy()={
     ???
@@ -52,42 +55,42 @@ class Actor() extends Elem{
   /*
   * TODO: make this logical
   * Need to figure out how much needs to be taken care of in state versus here
-  */
+  *
   def calculateHitAbil(state:State):Double={
     ???
-    //if(weapon.isMelee()) speed*(state.force-strength)/*+skill*/state.targetDistance weapon.distance
+    //if(weapon.isMelee()) speed*(state.force-strength)+skill state.targetDistance weapon.distance
   }
-  //def calculateDistanceEffect
-+
+  def calculateDistanceEffect
+
   def calculateDodgeAbil(state:State):Double={
     ???
   }
-
+  */
 }
 
 class PhPerson() extends Actor{
-
+???
 }
 
 class PhAnimal extends Actor{
-
+???
 }
 
 class AI(){
-
+???
 }
 class Tanker() extends AI{
-
+???
 }
 //Aggressive charger
 class Agger() extends AI{
-
+???
 }
 class Fleer() extends Agger{
-
+???
 }
 class Sniper() extends AI{
-
+???
 }
 
 
@@ -95,7 +98,7 @@ class Sniper() extends AI{
 * Modifies how capable the actor is of dodging, also used to tell if asleep, terrified, or similar
 *  ? Should create alertlevels?
 */
-class AlertLevel(){
+class AlertLevel(lvl:Int){
 
 }
 
@@ -104,35 +107,80 @@ class Pickup extends Elem{
 }
 
 class Weapon() extends Pickup{
-  val weight=0.0
-  val damage=0.0
-  val range=0.0
+  var name="Name"
+  var weight=0.0
+  var damage=0.0
+  var range=0.0
+  var accuracy=0.0
+  val weap=new Array[(String,Double,Double,Double,Double)](12)
+  weap(0)=("Name",1.0,1.0,1.0,1.0)//Name, damage, weight, accuracy, reach
+
 
   def getWeight():Double= weight
   def getDamage():Double= damage
   def getRange():Double= range
+  def getAcc():Double= accuracy
+
+
+  def lookup(num:Int, weapo:Array[(String,Double,Double,Double,Double)]):Unit={
+    var temp=weapo(num)
+    name=temp._1
+    damage=temp._2
+    weight=temp._3
+    accuracy=temp._4
+    range=temp._5
+  }
+  /*
+  def lookup(weapo:Array[(String,Double,Double,Double,Double)]):Unit={
+    name=weapo(1)
+    weight=weapo(3)
+    damage=weapo(2)
+    range=weapo(5)
+    accuracy=weapo(4)
+  }
+  */
 }
 
 
 
-class Melee extends Weapon{
+class Melee(num:Int) extends Weapon{
   //Range from 0-3
-  val isMelee=true
+  val isMel=true
+  val items=List( ("Shiv",1.0,1.0,1.0,1.0),("Bat",1.0,1.0,1.0,2.0),("Nail Board",1.0,1.0,1.0,3.0),
+    ("Pocket",1.0,1.0,1.0,1.0),("Machette",1.0,1.0,1.0,2.0),("Spear",1.0,1.0,1.0,3.0),
+    ("Fighting",1.0,1.0,1.0,1.0),("Spring",1.0,1.0,1.0,1.0),("Saber",1.0,1.0,1.0,2.0),
+    ("Mace",1.0,1.0,1.0,2.0),("Harpoon",1.0,1.0,1.0,3.0),("Halberd",1.0,1.0,1.0,1.0))
+  var x=0
+  for(i<-items){
+      weap(x)=i
+      x= x+1
+  }
+
+
+
+
 
   def isMelee():Boolean=isMelee
 }
 
-class Ranged extends Weapon{
+class Ranged(num:Int) extends Weapon{
   //
-  val isMelee=false
+  val isMel=false
   var ammo=0
   val speed=0.0
-  val spread=0.0
+  val items=List(("PPistol",1.0,1.0,1.0,1.0),("PShot",1.0,1.0,1.0,2.0),("PRifle",1.0,1.0,1.0,3.0),
+  ("Target",1.0,1.0,1.0,1.0),("20 Gague",1.0,1.0,1.0,2.0),("Bolt",1.0,1.0,1.0,3.0),
+  ("9 mil",1.0,1.0,1.0,1.0),("M1911",1.0,1.0,1.0,1.0),("Slug",1.0,1.0,1.0,2.0),
+  ("12 Gague",1.0,1.0,1.0,2.0),("Semi",1.0,1.0,1.0,3.0),("Scoped",1.0,1.0,1.0,1.0))
+
+  var x=0
+  for(i<-items){
+      weap(x)=i
+      x= x+1
+  }
 
   def isMelee():Boolean= isMelee
   def getAmmo:Int= ammo
   def getSpeed():Double= speed
-  def getSpread():Double= spread
+  //def getAcc():Double= spread
 }
-
-class

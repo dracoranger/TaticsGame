@@ -1,76 +1,22 @@
+package skrim
+
 import scala.collection.mutable
-import scala.util.random
-import elem.scala
+import scala.util.Random
+import elem._
 
-//holds tatics game runner
-/*
-*TODO: finalize hexGenrator
-*/
-class World(size:Int, type:Int){
-  //size is x by x at least for testing
-  val rand=new Random()
-  val map=hexGenerator(size,type)
-
-  def hexGenerator(size:Int,type:Int):Array(Array(Hex))={
-    //0 Flat
-    //1 -1 - 2 slope up
-    //2 -2 - 1 slope down
-    //3 -2 - 2 hilly
-    //4 -5 - 5 extreme
-    //need to figure out general trends DONE
-    var ma=0
-    var mi=0
-    var inc=0
-    if(type==1){
-      mi= -1
-      ma=2
-      inc= 1
-    }
-    else if(type==2){
-      mi= -2
-      ma=1
-      inc= -1
-    }
-    else if(type==3){
-      mi= -2
-      ma=2
-      inc= 0
-    }
-    else if(type==4){
-      mi= -5
-      ma=5
-      inc= 0
-    }
-    val ret=new Array(Array(empty))//empty
-    for (i<-1 to size*size){
-      if(i%size==0){
-        min+= inc
-        max+= inc
-      }
-      ret(i/size,i%size)=new Hex(rand.nextInt(mi,ma),0,i/size,i%size)
-    }
-  }
-    //val grid=Array.fill(Array.fill(10,new Hex()))
-
-    def move(from:Tuple(Int,Int),toward:Tuple(Int,Int)):Unit={
-      ???
-    }
-
-
-  }
 //Worried about the number of created empts
-class Hex(heigh:Int, type:Int, here:Elem, x:Int, y:Int){
+class Hex(heigh:Int, ty:Int, here:Elem, x:Int, y:Int){
   var located=here
-  var type=new Environment(type)
+  var typ=ty//new Environment(typ)
   var height=heigh
   var locl=(x,y)
   def isEmpty= located.isEmpty
 
-  def this(height:Int, type:Int){
-    this(height:Int,type:Int, here:new Empt())
+  def this(height:Int, typ:Int){
+    this(height,typ,new Empt(),1,1)
   }
 
-  def empty=this(0,0,new Empt(),1,1)
+  def this()=this(0,0,new Empt(),1,1)
 
   def moveElem():Elem={
     var ret=located
@@ -86,6 +32,73 @@ class Hex(heigh:Int, type:Int, here:Elem, x:Int, y:Int){
       false
     }
   }
+
+}
+
+//holds tatics game runner
+/*
+*TODO: finalize hexGenrator
+*/
+class World(size:Int, typ:Int)
+{
+  //size is x by x at least for testing
+  val rand=new Random()
+  val map=hexGenerator(size,typ)
+
+  def hexGenerator(size:Int,typ:Int):Array[Array[Hex]]=
+  {
+    //0 Flat
+    //1 -1 - 2 slope up
+    //2 -2 - 1 slope down
+    //3 -2 - 2 hilly
+    //4 -5 - 5 extreme
+    //need to figure out general trends DONE
+    var ma=0
+    var mi=0
+    var inc=0
+    if(typ==1)
+    {
+      mi= -1
+      ma=2
+      inc= 1
+    }
+    else if(typ==2)
+    {
+      mi= -2
+      ma=1
+      inc= -1
+    }
+    else if(typ==3)
+    {
+      mi= -2
+      ma=2
+      inc= 0
+    }
+    else if(typ==4)
+    {
+      mi= -5
+      ma=5
+      inc= 0
+    }
+    val ret=Array.fill(size,size)(new Hex()) //empty
+    for (i<-1 to size*size)
+    {
+      if(i%size==0)
+      {
+        mi+= inc
+        ma+= inc
+      }
+      ret(i/size,i%size)=new Hex(rand.nextInt(mi,ma),0,i/size,i%size)
+    }
+    ret
+  }
+    //val grid=Array.fill(Array.fill(10,new Hex()))
+
+  def move(from:(Int,Int),toward:(Int,Int)):Unit=
+  {
+      ???
+  }
+
 
 }
 
@@ -112,43 +125,52 @@ class Action(a:Actor,b:Actor){
   }
 }
 
-class Fight(a:Actor,b:Actor){
+class Fight(a:Actor,b:Actor)
+{
   val rand=new Random()
-  val att=a
-  val def=b
+  val attac=a
+  val defen=b
   val roll=rand.nextFloat()
   var multMod=0.0//? need to figure out how to apply proper modifiers, thinking (mult*base)+add
   var addMod=0.0
   var damMultMod=0.0
   var damAddMod=0.0
-  def getBaseHitChance(a:Actor,b:Actor):Double=a.getEmpathy(b)*(a.getHitAbil()-b.getDodgeAbil())
+  def getBaseHitChance(at:Actor,be:Actor):Double=at.getEmpathy(be)*(at.getHitAbil()-be.getDodgeAbil())
   def getHitDamage(a:Actor,b:Actor)=a.getWeaponDam()//-b.getArmorRes()//TODO Implement armor
-  def getMods(s:State)={
-    multMod=s.getMultMods(att)
-    addMod=s.getAddMods(att)
-    damMultMod=s.getDamMult(att)
-    damAddMod=s.getDamAdd(att)
+  def getMods(s:State)=
+  {
+    multMod=s.getMultMods(attac)
+    addMod=s.getAddMods(attac)
+    damMultMod=s.getDamMult(attac)
+    damAddMod=s.getDamAdd(attac)
   }
-  def calculateHit():Double= multMod*getBaseHitChance(att,def)+addMod
+  def calculateHit():Double=
+  {
+    var ret= multMod * getBaseHitChance(attac, defen) +addMod
+    ret
+  }
   def doesHit():Boolean= if(calculateHit()>roll) true else false
-  def calculateDamage():Double={
-    val dam=damMultMod*getHitDamage(att,def)+damAddMod
-    if(doesHit()){
-      if(getHitDamage(att,def)<0)return dam
+  def calculateDamage():Double=
+  {
+    val dam=damMultMod*getHitDamage(attac,defen)+damAddMod
+    if(doesHit())
+    {
+      if(getHitDamage(attac,defen)<0)return dam
       else if(dam<0)return 0.0
       else dam
     }
-    else{
+    else
+    {
       0.0
     }
   }
 
-  }
 }
 
 
-class Move(a:Actor){
 
+class Move(a:Actor){
+???
 }
 
 class Modifiers(state:State){
@@ -159,7 +181,7 @@ class Modifiers(state:State){
   ("Bloodloss",0.0,0.0,0.0,0.0,false),("Weap",0.0,0.0,0.0,0.0,false),("Movem",0.0,0.0,0.0,0.0,false))
   val specials=Array(("Sprinting",false),("Adrenaline",false), ("Angry",false),("Broken Leg",false),("Bloodloss",false),("Slowed",false))
   val mun=Array(("Hunger",false),("Thirst",false))
-  val mag=Array(("Mana"),false),("Entropy",false)
+  val mag=Array(("Mana",false),("Entropy",false))
 
   //bloodloss
   var leakRate=0
@@ -168,7 +190,7 @@ class Modifiers(state:State){
   final val EnabMod=6
   final val EnabSpec=2
   def incrimentBloodLoss():Unit=loss+=leakRate
-  def calculateBloodLoss():[(String,Double,Double,Double,Double,Boolean)]={
+  def calculateBloodLoss():(String,Double,Double,Double,Double,Boolean)={
     if(loss>90) ("Bloodloss",-0.9,0.0,0.0,0.0,mods(9).EnabMod)
     else if(loss>80) ("Bloodloss",-0.75,0.0,0.0,0.0,true)
     else if(loss>70) ("Bloodloss",-0.60,0.0,0.0,0.0,true)
@@ -213,18 +235,25 @@ class Modifiers(state:State){
       if(i._EnabMod){
         for(j<-2 to i.length-1){
           if (i._j<0){
-            var temp=i._j<0
+            var temp=i._j
+            var locl=j-2
             if(specials(1)._EnabSpec) temp=temp*.5
             if(specials(2)._EnabSpec) temp=temp*.25
-            stor._(j-2)+=temp*.25
+            stor._locl +=temp*.25
 
           }
-          else(i._j>0) stor._(j+4-2)+=i._j
+          else(i._j>0){
+            var locl=j+4-2
+            stor._locl +=i._j
+          }
         }
       }
     }
     var ret=(0.0,0.0,0.0,0.0)
-    for(i<-0 to (stor.length-1)/2)ret._i+=(stor._i+stor._(stor.length-1)/2))
+    for(i<-0 to (stor.length-1)/2){
+      var add=((stor.length-1)/2)+i
+      ret._i+= stor._i + stor._add//Might need to be 1
+    }
     ret
   }
 }
@@ -248,5 +277,5 @@ class State(actor:Actor, target:Actor){
 TODO:completely redo
 */
 class Combat(a:Actor,b:Actor){
-  for(i<-actors)
+  for(i<-actors) ???
 }
