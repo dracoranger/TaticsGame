@@ -17,6 +17,11 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+#compiled files and folders
+*.class
+$model/elem
+$model/skrim
+
 # =========================
 # Operating System Files
 # =========================
