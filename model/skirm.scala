@@ -1,4 +1,4 @@
-package skrim
+package skirm
 
 import scala.collection.mutable
 import scala.util.Random
