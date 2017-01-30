@@ -5,11 +5,11 @@ import scala.util.Random
 import elem._
 
 //Worried about the number of created empts
-class Hex(heigh:Int, ty:Int, here:Elem, x:Int, y:Int){
+class Hex(heigh:Int, ty:Int, here:Elem,){ //x:Int, y:Int){
   var located=here
   var typ=ty//new Environment(typ)
   var height=heigh
-  var locl=(x,y)
+  //var locl=(x,y)
   def isEmpty= located.isEmpty
 
   def this(height:Int, typ:Int){
@@ -43,11 +43,39 @@ class World(size:Int, typ:Int)
 {
   //size is x by x at least for testing
   val rand=new Random()
-  val map=hexGenerator(size,typ)
+  val map=mapGenerator(hexGenerator(size,typ),size)//temporary map generator, will create a new one for a planned battle
 
-  def hexGenerator(size:Int,typ:Int):Array[Array[Hex]]=
+  val (UL,UR,R,DR,DL,L)=((0,-1),(1,-1),(1,0),(0,1),(-1,1),(-1,0))
+
+  def neighbor(locl:[(Int,Int)],direction:[(Int,Int)]):[(Int,Int)]={
+    var ret=(0,0)
+    ret._1=locl._1+direction._1
+    ret._2=locl._2+direction._2
+    ret
+  }
+
+  def mapGenerator(input:Stack[Hex],radius:Int):mutable.Map[Hex]={
+    var ret:mutable.Map[(Int,Int),Hex]=Map()
+    var col= 1
+    var colmax=3
+    var row= -1*radius
+    var increasing=false
+    for(i<- row to radius){
+      if(increasing) colmax=colmax-1
+      else col=col-1
+      if(i==0) increasing=true
+      for(j<-col to colmax){
+        ret+=((row,col)->input.pop)
+      }
+    }
+
+    }
+    ret
+  }
+
+  def hexGenerator(radius:Int,typ:Int):Stack[Hex]=
   {
-    //0 Flat
+    //0 Flatq
     //1 -1 - 2 slope up
     //2 -2 - 1 slope down
     //3 -2 - 2 hilly
@@ -80,15 +108,19 @@ class World(size:Int, typ:Int)
       ma=5
       inc= 0
     }
-    val ret=Array.fill(size,size)(new Hex()) //empty
-    for (i<-1 to size*size)
+    val ret=Stack[Hex]()//Array.fill(size,size)(new Hex()) //empty
+    var size = 1
+    for(i<- 1 to radius){
+      size = size + i * 6
+    }
+    for (i<-1 to size)
     {
       if(i%size==0)
       {
         mi+= inc
         ma+= inc
       }
-      ret(i/size)(i%size)=new Hex(rand.nextInt(ma)+mi,0,new Empt(),i/size,i%size)
+      ret.push(new Hex(rand.nextInt(ma)+mi,0,new Empt()))
     }
     ret
   }
@@ -96,7 +128,11 @@ class World(size:Int, typ:Int)
 
   def move(from:(Int,Int),toward:(Int,Int)):Unit=
   {
-      ???
+      if(map.contains(toward)&&(map(toward).isEmpty()||map(toward).canOverlap()){
+        if(map(toward).canOverlap()){
+          map(from)
+        }
+      }
   }
 
 

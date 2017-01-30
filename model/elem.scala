@@ -6,7 +6,8 @@ import scala.util.Random
 
 
 class Elem(){
-  def isEmpty= false
+  def isEmpty()= false
+  def canOverlap()=true
 }
 
 class Empt() extends Elem{
@@ -23,6 +24,7 @@ class Actor() extends Elem{
   var weapon=defaultWeapon
   val isPC=false
   val ai=new AI()
+  override def canOverlap()=true
 
 
   //Stats
@@ -50,6 +52,9 @@ class Actor() extends Elem{
     if(health<1) alive=false
   }
   def updateEmpathy()={
+    ???
+  }
+  def pickup(item:Pickup)={
     ???
   }
   /*
