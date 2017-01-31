@@ -98,6 +98,150 @@ class Sniper() extends AI{
 ???
 }
 
+class Modifier(in:Int){
+  val n=Array("Lunge","Parry","Blocked","Broken Arm","Exausted","Stunned","Concussed","Blinded","Bloodloss","Weap","Movem","Sprinting","Adrenaline","Angry","Broken Leg","Bloodloss","Slowed","Hunger","Thirst","Mana","Entropy")
+  val ap=Array(-.1, 0.25, -0.40,-0.25,  -0.1, -0.4, -0.5, -0.75, 0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0)
+  val an=Array(0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0)
+  val dp=Array(.25, 0.0,  0.0,  -0.25,  -0.1, 0.0,  0.0,  0.0,   0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0)
+  val dn=Array(0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0, 0.0, 0.0, 0.0,  0.0,  0.0,    0.0,  0.0,  0.0,  0.0,   0.0, 0.0)
+  val en=Array(false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false)
+
+  var name=n(in)
+  var accPerc=ap(in)
+  var accNum=an(in)
+  var damPerc=dp(in)
+  var damNum=dn(in)
+  var enabled=en(in)
+
+  def getName()=name
+  def getAccPerc()=accPerc
+  def getAccNum()=accNum
+  def getDamPerc()=damPerc
+  def getDamNum()=damNum
+  def getEnabled()=enabled
+
+  def updateBloodLoss(loss:Int):Unit={
+    if(in==8){
+      if(loss>90) {
+        accPerc= -.9
+        enabled= true
+      }
+      else if(loss>80){
+        accPerc= -.75
+        enabled= true
+      }
+      else if(loss>70){
+        accPerc= -.6
+        enabled= true
+      }
+      else if(loss>60){
+        accPerc= -.45
+        enabled= true
+      }
+      else if(loss>50){
+        accPerc= -.3
+        enabled= true
+      }
+      else if(loss>40){
+        accPerc= -.2
+        enabled= true
+      }
+      else if(loss>30){
+        accPerc= -.15
+        enabled= true
+      }
+      else if(loss>20){
+        accPerc= -.1
+        enabled= true
+      }
+      else{
+        accPerc= 0.0
+        enabled= false
+      }
+    }
+  }
+
+}
+
+class Modifiers(){
+  //accur perc,accur num, dam perc, dam num
+  val mods=Array(new Modifier(0),new Modifier(1),new Modifier(2),new Modifier(3),new Modifier(4),new Modifier(5),new Modifier(6),new Modifier(7),new Modifier(8))
+  val specials=Array(new Modifier(9),new Modifier(10),new Modifier(11),new Modifier(12),new Modifier(13),new Modifier(14),new Modifier(15),new Modifier(16))
+  val mun=Array(new Modifier(17),new Modifier(18))
+  val mag=Array(new Modifier(19),new Modifier(20))
+
+  //bloodloss
+  var leakRate=0
+  var loss=0
+  //stores where the boolean is for mods and specials
+  final val enabMod=6
+  final val enabSpec=2
+  def incrimentBloodLoss():Unit=loss+=leakRate
+  def modBloodLoss():Int={
+    if(loss>90) 1
+    else if(loss>80) 2
+    else if(loss>70) 3
+    else if(loss>60) 4
+    else if(loss>50) 5
+    else if(loss>40) 6
+    else if(loss>30) 7
+    else if(loss>20) 8
+    else if(loss>10&&specials(2).getEnabled()) 11
+    else if(specials(5).getEnabled()&&specials(2).getEnabled()) 12
+    else if(loss>10&&specials(6).getEnabled()) 13
+    else if(specials(5).getEnabled()&&specials(6).getEnabled()) 14
+    else if(loss>10) 9
+    else if(specials(5).getEnabled()) 10
+    else 0
+  }
+
+  def update():Unit={
+    mods(8).updateBloodLoss(loss)
+    //mods(9)=state.calculateWeap()
+    //mods(10)=state.calculateMovem()
+  }
+
+  def totaledMods():Array[Double]=
+  {
+    //neg(accur perc,accur num, dam perc, dam num)pos(accur perc,accur num, dam perc, dam num)
+    //arrays 0
+    // tuple ._1
+    update()
+    var stor=Array(1.0,0.0,1.0,0.0)//,0.0,0.0,0.0,0.0)
+    var num=0
+    for(i<-mods)
+    {
+      if(i.getEnabled())
+      {//TODO: use for comprihensions
+        stor(0) *=
+        {
+          var temp=i.getAccPerc
+          if(i.getAccPerc()<0&&specials(12).getEnabled) temp=.5*temp
+          if(i.getAccPerc()<0&&specials(13).getEnabled) temp=.25*temp
+          temp
+        }
+        stor(1) +=
+        {
+          i.getAccNum()
+        }
+        stor(2) *=
+        {
+          var temp=i.getDamPerc
+          if(i.getDamPerc()<0&&specials(12).getEnabled) temp=.5*temp
+          if(i.getDamPerc()<0&&specials(13).getEnabled) temp=.25*temp
+          temp
+        }
+        stor(3) +=
+        {
+          i.getDamNum()
+        }
+      }
+    }
+    stor
+  }
+}
+
+
 
 /*
 * Modifies how capable the actor is of dodging, also used to tell if asleep, terrified, or similar

@@ -5,11 +5,19 @@ Honestly, most of the information is scattered through a few notebooks, and I'm 
 
 TODO
 1. Hex
+
 2. movement
+
 3. Hand to hand
+
 4. Ranged
+
 5. AOE
+
 6. Aid
+
 7. Testing
+
 8. AI
+
 9. Story and other information
