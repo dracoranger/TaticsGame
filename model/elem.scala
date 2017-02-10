@@ -54,8 +54,9 @@ class Actor() extends Elem{
   def updateEmpathy()={
     ???
   }
-  def pickup(item:Pickup)={
-    ???
+  def pickup(item:Pickup)= item match{
+    Case weap()= this.weap=item
+    Case
   }
   /*
   * TODO: make this logical
@@ -74,7 +75,7 @@ class Actor() extends Elem{
 }
 
 class PhPerson() extends Actor{
-???
+val inven=new Inventory()
 }
 
 class PhAnimal extends Actor{
@@ -169,7 +170,8 @@ class Modifiers(){
   val specials=Array(new Modifier(9),new Modifier(10),new Modifier(11),new Modifier(12),new Modifier(13),new Modifier(14),new Modifier(15),new Modifier(16))
   val mun=Array(new Modifier(17),new Modifier(18))
   val mag=Array(new Modifier(19),new Modifier(20))
-
+  val armor=Array()
+  val armPointer= ???// pointer to inventory
   //bloodloss
   var leakRate=0
   var loss=0
@@ -250,10 +252,47 @@ class Modifiers(){
 class AlertLevel(lvl:Int){
 
 }
-
+/*
+Could just have a pickup true or false, rather than making this a top level
+*/
 class Pickup extends Elem{
 
 }
+
+class inventory(){
+    val consum=Array(Array(0,0,0),Array(new Medkit(), new Garnade(), new Pick))
+    val weapons= Array(new Fist(), new Rock(), new Kick())
+    val armor= Array()//head, torso, pants, gloves, boots
+
+    def getComsum():Array(Consum)= consum
+    …// rest
+
+    def equipWeap(num:Int,in:Weap):Weap={//same with armor
+      var temp= weapons(num)
+      weapons(num)=in
+      temp
+    }
+
+    def useConsumable(con:Consumab):Boolean=con match{
+      case Medkit()=> if(consum(x)>0){
+        consum(x) -= 1
+        true
+      }
+      else false
+    }
+
+    def dropWeap(in:int):Weap={
+      var ret=weap(in)
+      weap(in)= default(in)
+      ret
+    }// same with armor
+    /*
+    TODO: tally armor effects
+    */
+    def getArEf():{
+      ???
+    }
+  }
 
 class Weapon() extends Pickup{
   var name="Name"

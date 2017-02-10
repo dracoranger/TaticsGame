@@ -33,3 +33,59 @@ Small red and black demon preens in the light
 $PlayerName the $PlayerJob... Oh this is going to be so fun."
 "Can you turn around?  Look at the wall for a moment."
 Pure white light
+
+Name
+
+After drinking too much (milk, soda, beer, water), N got out of bed, grumbling.  What was (he/she/shi) annoyed about? (work, practice).  Do you want to be more specific? (the office, the bar, pt, the store)/(mathletes, track, football, that viking arse).
+N heard something from behind their bedroom door, a voice that wad becoming increasingly insistant.
+???: Hey wake up!
+...
+???: I said wake up!  You're going to miss the fireworks!
+...
+???: WAKE UP!
+
+(Get out, open the door)
+Inside your room is a glowing red imp, poised go crack a chair over your bed.
+???: oh there you are!  The fireworks are just starting!
+
+(Go along, resist)
+It grabs you and pulls you over to the window.  You look out onto a generic cityscape.
+A few moments pass.  A blinding light.  Screen is blurred to crap.
+???:he he he.  I forgot about that.  Let's see if…
+Screen pulls back into isometric
+???: Not exactly what I had in mind, but eh, what are you going to do?
+Free movement enabled.
+???: the cloud should be here in maybe 30 rounds.  I'd get out before then.
+
+(Resist) you have a few seconds to grab stuff in first person before being blinded and the same effect applies.
+
+(Head downstairs) indefinite time, can't grab stuff from upstairs, explosion occurs either as you leave your front door or get in the car.  Imp appears besides you.
+???: clever ain't you?  Now what are you going to do?  Can't see, can't drive, you'll burn in a couple minutes. Are you willing to owe me a favor?
+
+(Yes, no)
+Third person, can now drive or run off
+No
+???: aww we were going to have so much fun together.  Well-ta.
+Dry culvert nearly off screen run there, can block out the radiation.  (Impossible mode)
+
+Do you want to reminisce about your past?  (Statically rebalance and get to chose what class you are.)
+
+World map
+Travel map of the local area.  With a big red circle over the city.  Ends abruptly, some pencil like drawings of remembered portions of the county.
+Local map is allows navigation within places of interest.  Now two choices, car on-foot
+
+Car
+military base- car fired upon forced to divert to local garage, car gets upgraded
+mall- riots, difficult to move anywhere, skill checks for supplies
+national Park - bridge blown out, local town, camping gear, beneficial modifiers
+
+Walking distance
+School- friendly allies from beginning
+Supermarket - more supplies
+Grave yard - mouselims are good for anti rad.  Also stupid zombie hunter comes by before rads are cleared out.  Crippled, can put out of misery or just take his equipment.
+
+Wait it out.
+
+
+
+Part 1:
